@@ -6,6 +6,11 @@ namespace AspWebApi.Data
 {
     public class ApiDbContext : DbContext
     {
+        public ApiDbContext(DbContextOptions<ApiDbContext>options )
+            :base(options)
+        {
+                
+        }
         public DbSet<Personne> Personnes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -18,9 +23,9 @@ namespace AspWebApi.Data
             });
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Filename=api.db");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite("Filename=api.db");
+        //}
     }
 }
