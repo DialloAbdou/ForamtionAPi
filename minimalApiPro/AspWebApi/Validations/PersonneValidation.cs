@@ -1,9 +1,10 @@
 ﻿using AspWebApi.Data.Models;
+using AspWebApi.Dto;
 using FluentValidation;
 
 namespace AspWebApi.Validations
 {
-    public class PersonneValidation : AbstractValidator<Personne>
+    public class PersonneValidation : AbstractValidator<PersonInputModel>
     {
         public PersonneValidation()
         {

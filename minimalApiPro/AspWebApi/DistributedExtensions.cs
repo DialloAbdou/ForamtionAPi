@@ -14,9 +14,6 @@ namespace AspWebApi
             {
                  PropertyNameCaseInsensitive = true,
             });
-           
-          
-       
         }
 
         public static  async Task SetAsync<T>(this IDistributedCache cache, String key, T value)
