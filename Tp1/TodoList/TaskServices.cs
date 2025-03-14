@@ -1,4 +1,6 @@
-﻿namespace TodoList
+﻿using TodoList.Dto;
+
+namespace TodoList
 {
     public class TaskServices
     {
@@ -9,41 +11,43 @@
 
         };
 
-        public List<MyTask> GetAll()
+        public List<TaskOutputModel> GetAll()
         {
-
-            return tasks;
+            
+            return tasks.ConvertAll(GetTaskToOutPutModel);
         }
 
-        public MyTask? GetbyId(Int32 id)
+        public TaskOutputModel? GetbyId(Int32 id)
         {
             var task = tasks.Find(x => x.Id == id);
-            if (task is not null) return task;
+            if (task is not null) return GetTaskToOutPutModel(task);
             return null;
         }
 
-        public MyTask AddTask(String title)
+        public TaskOutputModel AddTask(String title)
         {
             MyTask task = new MyTask { Id = tasks.Max(t => t.Id) + 1, StartDate = DateTime.Now, Title = title };
             tasks.Add(task);
-            return task;
+            return GetTaskToOutPutModel(task);
         }
 
-        public MyTask UpdateTask(Int32 id, MyTask task)
+        public TaskOutputModel UpdateTask(Int32 id, TaskInputModel task)
         {
             var taksOld = tasks.Find(t => t.Id == id);
             if (taksOld is not null)
             {
                 taksOld.Title = task.Title;
-                taksOld.StartDate = task.StartDate;
-                taksOld.EndDate = task.EndDate;
+                taksOld.StartDate = task.StartDate.GetValueOrDefault();
+                taksOld.EndDate = task.EndDate == null ? null : task.EndDate.GetValueOrDefault();
+                return GetTaskToOutPutModel(taksOld);
             }
-            return taksOld;
+            return null;
+         
         }
 
-        public List<MyTask> ActivesTask()
+        public List<TaskOutputModel> ActivesTask()
         {
-            var taskActives = tasks.Select(a=>a).Where(t=>t.EndDate is null).ToList();
+            var taskActives = (tasks.Select(a=>a).Where(t=>t.EndDate is null).ToList()).ConvertAll(GetTaskToOutPutModel);
             return taskActives;
         }
 
@@ -54,6 +58,16 @@
             if( task is null) return false;
             tasks.Remove(task);
             return true;
+        }
+        private TaskOutputModel GetTaskToOutPutModel(MyTask task)
+        {
+            return new TaskOutputModel
+                (
+                    task.Id,
+                    task.Title,
+                    task.StartDate,
+                    task.EndDate.GetValueOrDefault()
+                ); 
         }
     }
 }
