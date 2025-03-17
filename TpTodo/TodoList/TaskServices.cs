@@ -1,4 +1,5 @@
-﻿using TodoList.Dto;
+﻿using TodoList.Data.Model;
+using TodoList.Dto;
 
 namespace TodoList
 {
@@ -11,7 +12,7 @@ namespace TodoList
 
         };
 
-        public List<TaskOutputModel> GetAll()
+        public  List<TaskOutputModel> GetAll()
         {
             
             return tasks.ConvertAll(GetTaskToOutPutModel);
