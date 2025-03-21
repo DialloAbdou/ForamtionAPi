@@ -17,7 +17,7 @@ builder.Logging.ClearProviders();
 
 var loggerConfigguration = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day);
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day); 
 
 var logger = loggerConfigguration.CreateLogger();
 

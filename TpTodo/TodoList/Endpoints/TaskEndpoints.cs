@@ -6,7 +6,7 @@ namespace TodoList.Endpoints
     {
         public static RouteGroupBuilder GetTaskEndpoints(this RouteGroupBuilder groupe)
         {
-            groupe.MapGet("/", (TaskServices taskServices) => taskServices.GetAll());
+            //groupe.MapGet("/", (TaskServices taskServices) => taskServices.GetAll());
             return groupe;
         }
 

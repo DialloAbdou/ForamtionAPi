@@ -19,7 +19,7 @@ namespace TodoList.Data
                 t.ToTable("Taskes");
                 t.Property(t => t.Title).IsRequired();
                 t.Property(t=>t.StartDate).IsRequired();
-                t.Property(t => t.EndDate).HasDefaultValue();
+                t.Property(t => t.EndDate);
             });
         }
     }
