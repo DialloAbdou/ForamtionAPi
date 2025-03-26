@@ -1,11 +1,8 @@
 ﻿
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using TodoList;
 using TodoList.Data;
-using TodoList.Dto;
 using TodoList.Endpoints;
 using TodoList.Services;
 
@@ -22,7 +19,9 @@ builder.Logging.AddSerilog(logger);
 builder.Services.AddDbContext<TaskDbContext>(
     op => op.UseSqlite(builder.Configuration.GetConnectionString("sqlite")));
 
-builder.Services.AddScoped<ITaskService, TaskServices>();
+builder.Services.AddScoped<ITaskService,TaskServices>();
+builder.Services.AddScoped<UserServices>();
+
 
 builder.Services.AddEndpointsApiExplorer(); // permet d'explorer les differents endointd dont on dispose
 builder.Services.AddSwaggerGen(); // support de swagger
@@ -42,8 +41,9 @@ var app = builder.Build();
 //   .MigrateAsync(); // mise a jour de DB
 #endregion!
 
- app.MapGroup("/todos").GetTaskEndpoints();
-if(app.Environment.IsDevelopment())
+app.MapGroup("/todos").GetTaskEndpoints();
+app.MapGroup("/users").GetUserEndPoint();
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();// permet de generer le fichier swagger
     app.UseSwaggerUI(); //permet de generer l'interface graphique 

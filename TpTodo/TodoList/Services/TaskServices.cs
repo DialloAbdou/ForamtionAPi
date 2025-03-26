@@ -2,9 +2,8 @@
 using TodoList.Data;
 using TodoList.Data.Model;
 using TodoList.Dto;
-using TodoList.Services;
 
-namespace TodoList
+namespace TodoList.Services
 {
     public class TaskServices : ITaskService
     {
@@ -90,7 +89,7 @@ namespace TodoList
         {
             var task = await _dbContext.Taskes.FirstOrDefaultAsync(t => t.Id == taskId);
             if (task is null) return null;
-            return this.GetTaskToOutPutModel(task);
+            return GetTaskToOutPutModel(task);
 
         }
 
@@ -102,11 +101,11 @@ namespace TodoList
                 StartDate = DateTime.Now,
             };
             await _dbContext.AddAsync(task);
-          await _dbContext.SaveChangesAsync();
-            return this.GetTaskToOutPutModel(task);
+            await _dbContext.SaveChangesAsync();
+            return GetTaskToOutPutModel(task);
         }
 
-        public async Task<Boolean> DeleteTask(int id)
+        public async Task<bool> DeleteTask(int id)
         {
             var result = await _dbContext.Taskes
                 .Where(t => t.Id == id)
@@ -116,14 +115,14 @@ namespace TodoList
 
         public async Task<IEnumerable<TaskOutPutModel>> GetTaskActive()
         {
-             var taskActives = await _dbContext.Taskes
-                          .Select(t=>t)
-                          .Where(t=>t.EndDate == null)
-                         .ToListAsync();
-            return taskActives.ConvertAll(this.GetTaskToOutPutModel);
+            var taskActives = await _dbContext.Taskes
+                         .Select(t => t)
+                         .Where(t => t.EndDate != null)
+                        .ToListAsync();
+            return taskActives.ConvertAll(GetTaskToOutPutModel);
         }
 
-        public async Task<Boolean> UpdateTask(int id, TaskInputModel taskInput)
+        public async Task<bool> UpdateTask(int id, TaskInputModel taskInput)
         {
             var result = await _dbContext.Taskes
                 .Where(t => t.Id == id)
@@ -135,6 +134,6 @@ namespace TodoList
 
         }
 
-    
+
     }
 }
