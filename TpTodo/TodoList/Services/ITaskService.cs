@@ -11,6 +11,7 @@ namespace TodoList.Services
          Task<Boolean> UpdateTask(Int32 id, TaskInputModel taskInput);
         Task<Boolean> DeleteTask(Int32 id);
         Task<IEnumerable<TaskOutPutModel>> GetTaskActive();
+        Task<User?> GetUserAsync(String usertoken);
 
 
 

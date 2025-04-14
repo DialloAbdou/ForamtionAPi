@@ -1,12 +1,19 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using TodoList.Dto;
+using TodoList.Repositories;
 using TodoList.Services;
 
 namespace TodoList.Endpoints
 {
     public static class TaskEndpoints
     {
+        public static IServiceCollection AddTodoServices(this IServiceCollection services)
+        {
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<ITaskService, TaskServices>();
+            return services;
+        }
         public static RouteGroupBuilder GetTaskEndpoints(this RouteGroupBuilder groupe)
         {
             groupe.MapGet("", GetAllTaskAsync)
@@ -97,10 +104,14 @@ namespace TodoList.Endpoints
             (
                 [FromBody] TaskInputModel taskImput,
                 [FromServices] IValidator<TaskInputModel> validator,
+                 String userToken,
                 [FromServices] ITaskService taskServices,
                 [FromServices] ILogger<Program> logger
             )
         {
+           
+            var usr =  await taskServices.GetUserAsync (userToken);
+
             var result = validator.Validate(taskImput);
             if (!result.IsValid) return Results.BadRequest(result.Errors.Select(e => new
             {

@@ -5,5 +5,6 @@
         public String Title { get; set; } = String.Empty;
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public String UserToken { get; set; } = String.Empty;
     }
 }

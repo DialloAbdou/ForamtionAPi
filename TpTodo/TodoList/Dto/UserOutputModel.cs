@@ -5,6 +5,6 @@
         Int32 Id,
         String Name, 
         String UserToken
-     );
+    );
     
 }

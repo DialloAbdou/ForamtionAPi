@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TodoList.Data;
 using TodoList.Endpoints;
+using TodoList.Repositories;
 using TodoList.Services;
 
 var builder = WebApplication.CreateBuilder();
@@ -16,12 +17,15 @@ var loggerConfiguration = new LoggerConfiguration()
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
 
+builder.Services.AddTodoServices();
+builder.Services.AddUSerService();
+
 builder.Services.AddDbContext<TaskDbContext>(
     op => op.UseSqlite(builder.Configuration.GetConnectionString("sqlite")));
-
-builder.Services.AddScoped<ITaskService,TaskServices>();
-builder.Services.AddScoped<UserServices>();
-
+//builder.Services.AddScoped<IUserRepository, UserRepository>();
+//builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+//builder.Services.AddScoped<ITaskService, TaskServices>();
+//builder.Services.AddScoped<IUserServices, UserServices>();
 
 builder.Services.AddEndpointsApiExplorer(); // permet d'explorer les differents endointd dont on dispose
 builder.Services.AddSwaggerGen(); // support de swagger
