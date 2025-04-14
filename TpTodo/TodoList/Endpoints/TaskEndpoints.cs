@@ -29,7 +29,7 @@ namespace TodoList.Endpoints
                 .WithTags("Gestion des Taches");
 
             groupe.MapPost("", AddTaskAsync)
-                .Produces<TaskOutPutModel>(statusCode:200,contentType:"applicaton/json")
+                .Produces<TaskOutPutModel>(statusCode: 200, contentType: "applicaton/json")
                 .WithTags("Gestionnaire des Taches");
 
             groupe.MapPut("/{id:int}", UpdateTaskAsync)
@@ -46,10 +46,14 @@ namespace TodoList.Endpoints
         /// <returns></returns>
         private static async Task<IResult> GetAllTaskAsync
             (
-                 [FromServices] ITaskService taskServices
+               [FromServices] ITaskService taskServices,
+               [FromServices] IAuthService authService,
+               HttpContext httpContext
             )
         {
-            var taks = await taskServices.GetAllTasks();
+            var userId = await authService.GetUserAuth(httpContext);
+            if (!userId.HasValue) return Results.Unauthorized();
+            var taks = await taskServices.GetAllTasks(userId.Value);
             if (taks is null) return Results.NoContent();
             return Results.Ok(taks);
         }
@@ -65,10 +69,16 @@ namespace TodoList.Endpoints
             (
               [FromRoute] int id,
               [FromServices] ITaskService taskServices,
-              [FromServices] ILogger<Program> logger
+              [FromServices] ILogger<Program> logger,
+              [FromServices] IAuthService authService,
+              HttpContext httpContext
+
             )
         {
-            var task = await taskServices.GetTaskById(id);
+            var userId = await authService.GetUserAuth(httpContext);
+            if (!userId.HasValue) return Results.Unauthorized();
+
+            var task = await taskServices.GetTaskById(id, userId.Value);
             logger.LogInformation("le nom de l'identifiant est {id},{title} ", id, task.Title);
             if (task is not null) return Results.Ok(task);
             return Results.NotFound();
@@ -83,10 +93,15 @@ namespace TodoList.Endpoints
         private static async Task<IResult> GetAllTaskActivesAsync
             (
                 [FromServices] ITaskService taskServices,
-                [FromServices] ILogger<Program> logger
+                [FromServices] ILogger<Program> logger,
+                [FromServices] IAuthService authService,
+                HttpContext httpContext
+
             )
         {
-            var todoactives = await taskServices.GetTaskActive();
+            var userId = await authService.GetUserAuth(httpContext);
+            if (!userId.HasValue) return Results.Unauthorized();
+            var todoactives = await taskServices.GetTaskActive(userId.Value);
             if (todoactives is null) return Results.NoContent();
             return Results.Ok(todoactives);
         }
@@ -104,13 +119,16 @@ namespace TodoList.Endpoints
             (
                 [FromBody] TaskInputModel taskImput,
                 [FromServices] IValidator<TaskInputModel> validator,
-                 String userToken,
                 [FromServices] ITaskService taskServices,
-                [FromServices] ILogger<Program> logger
+                [FromServices] ILogger<Program> logger,
+                [FromServices] IAuthService authService,
+                HttpContext httpContext
+
             )
         {
-           
-            var usr =  await taskServices.GetUserAsync (userToken);
+
+            var userId = await authService.GetUserAuth(httpContext);
+            if (!userId.HasValue) return Results.Unauthorized();
 
             var result = validator.Validate(taskImput);
             if (!result.IsValid) return Results.BadRequest(result.Errors.Select(e => new
@@ -119,7 +137,7 @@ namespace TodoList.Endpoints
                 e.PropertyName
 
             }));
-            var mytak = await taskServices.AddTask(taskImput);
+            var mytak = await taskServices.AddTask(taskImput, userId.Value);
             return Results.Ok(mytak);
         }
 
@@ -136,9 +154,13 @@ namespace TodoList.Endpoints
               [FromRoute] int id,
               [FromBody] TaskInputModel task,
               [FromServices] ITaskService taskServices,
-              [FromServices] ILogger<Program> logger)
+              [FromServices] ILogger<Program> logger,
+              [FromServices] IAuthService authService,
+               HttpContext httpContext)
         {
-            var result = await taskServices.UpdateTask(id, task);
+            var userId = await authService.GetUserAuth(httpContext);
+            if (!userId.HasValue) return Results.Unauthorized();
+            var result = await taskServices.UpdateTask(id,userId.Value, task);
             if (result)
             {
                 return Results.Ok($"it's {result} ");
