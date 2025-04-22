@@ -6,6 +6,8 @@
         public string Nom { get; set; } = string.Empty;
         public string Prenom { get; set; } = string.Empty;
         public DateTime Birthday { get; set; }
-       
+        public string Adresse { get; set; } = string.Empty;
+        public string DisplayId { get; set; } = string.Empty;
+
     }
 }

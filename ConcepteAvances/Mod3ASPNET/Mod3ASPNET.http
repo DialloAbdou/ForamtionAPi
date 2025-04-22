@@ -1,0 +1,6 @@
+@Mod3ASPNET_HostAddress = http://localhost:5265
+
+GET {{Mod3ASPNET_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

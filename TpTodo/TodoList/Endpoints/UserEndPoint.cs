@@ -12,7 +12,7 @@ namespace TodoList.Endpoints
         public static IServiceCollection AddUSerService(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped< IUserServices, UserServices>();
+            services.AddScoped<UserServices>();
             return services;
         }
         public static RouteGroupBuilder GetUserEndPoint(this RouteGroupBuilder groupe)

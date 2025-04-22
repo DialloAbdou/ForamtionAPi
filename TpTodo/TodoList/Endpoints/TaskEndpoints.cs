@@ -11,7 +11,9 @@ namespace TodoList.Endpoints
         public static IServiceCollection AddTodoServices(this IServiceCollection services)
         {
             services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<ITaskService, TaskServices>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITaskService,TaskServices>();
             return services;
         }
         public static RouteGroupBuilder GetTaskEndpoints(this RouteGroupBuilder groupe)

@@ -24,13 +24,13 @@ builder.Services.AddDbContext<TaskDbContext>(
     op => op.UseSqlite(builder.Configuration.GetConnectionString("sqlite")));
 //builder.Services.AddScoped<IUserRepository, UserRepository>();
 //builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-//builder.Services.AddScoped<ITaskService, TaskServices>();
-//builder.Services.AddScoped<IUserServices, UserServices>();
+//builder.Services.AddScoped<TaskServices>();
+//builder.Services.AddScoped<UserServices>();
 
 builder.Services.AddEndpointsApiExplorer(); // permet d'explorer les differents endointd dont on dispose
 builder.Services.AddSwaggerGen(); // support de swagger
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(); /* trouve moi toute les validator qui sont dans cette assembly*/
 
 var app = builder.Build();
 #region Migration
